@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+puts "How many times do you want the program to play the game?"
+runs = gets.chomp.to_i
+puts "The game will automatically run #{runs.to_s} times."
+
+puts "Let's try to win a car. Which strategy do you choose?"
+puts "1: Stick to the first choice"
+puts "2: Switch after the reveal"
+choice = gets.chomp.to_i
+
+stick = "You have decided to stick to the first choice."
+switch = "You have decided to switch after the reveal."
+
+choice == 1 ? puts(stick) : puts(switch)
+
+car_counter = 0
+short_run = runs < 10
+def ask_for_next
+  puts "Next run?"
+  gets
+end
+runs.times do
+  car_is_in = rand(3)
+  if short_run
+    puts "Don't tell anyone, we've hidden the car behind door nr #{(car_is_in + 1).to_s}"
+  end
+
+  user_picks = rand(3)
+
+  if (user_picks == car_is_in)
+    if choice == 1
+      if short_run
+        puts "Yes! The player picked the car and they're not going to change their mind so they're going to win!"
+        ask_for_next
+      end
+      car_counter += 1
+    else
+      if short_run
+        puts "Oh noes! The player has picked the door with the car behind it. But they are going to switch to they have already lost!"
+        ask_for_next
+      end
+    end
+  else # player hasn't picked the car at first
+    if choice == 1
+      if short_run
+        puts "Oh noes! The player hasn't picked the car, and they're not going to change their mind. They get a goat."
+        ask_for_next
+      end
+    else
+      if short_run
+        puts "Yes! The player hasn't picked the door with the car, and is going to change their mind, so they will win!"
+        ask_for_next
+      end
+      car_counter += 1
+    end
+  end
+end
+
+if runs > 3
+  puts "The player has won #{car_counter.to_s} times out of #{runs.to_s} attempts. That's a #{((car_counter.to_f / runs) * 100 ).round} % success."
+end
